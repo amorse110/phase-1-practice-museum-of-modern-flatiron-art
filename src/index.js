@@ -1,53 +1,52 @@
+// Globals
 const exhibitAPI = "http://localhost:3000/current-exhibits"
-const exTitle = document.getElementById('exhibit-title')
-const exDescription = document.getElementById('exhibit-description')
-const exImage = document.getElementById('exhibit-image')
-const exComments = document.getElementById('comments-section')
-const commentButton = document.getElementById('comment-form')
-let comArray = [];
-const ticketButton = document.getElementById('buy-tickets-button')
-const boughtTickets = document.getElementById('tickets-bought')
+let selectedExhibit
+
+//DOM Selectors
+const title = document.getElementById('exhibit-title')
+const tixBtn = document.getElementById('buy-tickets-button')
+const tixBought = document.getElementById('tickets-bought')
+const description = document.getElementById('exhibit-description')
+const container = document.getElementById('comments-section')
+const form = document.getElementById('comment-form')
+const image = document.getElementById('exhibit-image')
 
 //EVENT LISTENERS
-commentButton.addEventListener('submit', addComment)
-ticketButton.addEventListener('click', buyTicket)
+form.addEventListener('submit', handleSubmit)
+tixBtn.addEventListener('click', buyTicket)
 
-//FETCH
+//FETCHES
 fetch(`${exhibitAPI}/1`)
 .then(res => res.json())
-.then(renderFirstExhibit)
+.then(displayExhibit)
 
-//Deliverable 1
-function renderFirstExhibit(exhibit) {
-  exTitle.textContent = exhibit.title;
-  exDescription.textContent = exhibit.description;
-  exImage.src = exhibit.image;
-  boughtTickets.textContent = `${exhibit.tickets_bought} Tickets Bought`;
-  comArray = exhibit.comments;
-  let arrayLength = comArray.length;
-  let comment
-  for (i = 0; i < arrayLength; i++) {
-    comment = document.createElement('p');
-    comment.textContent = comArray[i];
-    exComments.appendChild(comment);
-  }
+//Render Functions
+function displayExhibit(exhibitObj) {
+  selectedExhibit = exhibitObj
+  title.textContent = exhibitObj.title
+  description.textContent = exhibitObj.description
+  image.src = exhibitObj.image
+  tixBought.textContent = `${exhibitObj.tickets_bought} Tickets Bought`
+  exhibitObj.comments.forEach(comment => addComment(comment))
 }
 
-//Deliverable 2
-function addComment(event) {
-  event.preventDefault();
-  const form = event.target;
-  const newComment = form.comment.value
-  let comment = document.createElement('p');
-  comment.textContent = newComment
-  exComments.appendChild(comment)
-  comArray.push(newComment)
+//Event Handlers
+function addComment(commentStr) {
+  const newComment = document.createElement('p')
+  newComment.textContent = commentStr
+  container.append(newComment)
 }
 
-//Deliverable 3 Work In Progress
+function handleSubmit(e) {
+  e.preventDefault()
+  const commentTxt = e.target.commentInput.value
+  addComment(commentTxt)
+  form.reset()
+}
+
 function buyTicket() {
-  boughtTickets.value = `${parseInt(boughtTickets.value) + 1} Tickets Bought`;
-  console.log(boughtTickets)
+  selectedExhibit.tickets_bought += 1
+  displayExhibit(selectedExhibit)
 }
 
 
