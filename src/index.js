@@ -6,11 +6,8 @@ const exComments = document.getElementById('comments-section')
 const commentButton = document.getElementById('comment-form')
 let comArray = [];
 
-
 //EVENT LISTENERS
 commentButton.addEventListener('submit', addComment)
-
-
 
 //FETCH
 fetch(`${exhibitAPI}/1`)
@@ -21,7 +18,7 @@ function renderFirstExhibit(exhibit) {
   exTitle.textContent = exhibit.title;
   exDescription.textContent = exhibit.description;
   exImage.src = exhibit.image;
-  let comArray = exhibit.comments;
+  comArray = exhibit.comments;
   let arrayLength = comArray.length;
   let comment
   for (i = 0; i < arrayLength; i++) {
@@ -31,11 +28,14 @@ function renderFirstExhibit(exhibit) {
   }
 }
 
-
+//Deliverable 2 WORK IN PROGRESS
 function addComment(event) {
   event.preventDefault();
   const form = event.target;
   const newComment = form.comment.value
+  let comment = document.createElement('p');
+  comment.textContent = newComment
+  exComments.appendChild(comment)
   comArray.push(newComment)
 }
 
