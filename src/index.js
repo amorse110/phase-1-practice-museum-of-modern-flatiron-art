@@ -45,7 +45,7 @@ function addComment(event) {
 }
 
 //Deliverable 3 Work In Progress
-function buyTicket(exhibit) {
+function buyTicket() {
   boughtTickets.value = `${parseInt(boughtTickets.value) + 1} Tickets Bought`;
   console.log(boughtTickets)
 }
